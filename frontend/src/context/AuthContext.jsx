@@ -3,6 +3,7 @@
 // Authentication context for managing user state globally
 import { createContext, useContext, useEffect, useState } from 'react';
 import { getCurrentUser, login as loginService, logout as logoutService, register as registerService } from '../services/authService';
+import { updateProfile as updateProfileService } from '../services/userService';
 
 const AuthContext = createContext(null);
 
@@ -78,6 +79,22 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Update user profile and update local state
+  const updateProfile = async (profileData) => {
+    try {
+      setError(null);
+      const response = await updateProfileService(profileData);
+      // response may be the updated user object or contain { user }
+      const updatedUser = response.user || response;
+      setUser(updatedUser);
+      return response;
+    } catch (err) {
+      const message = err.response?.data?.message || 'Update failed';
+      setError(message);
+      throw new Error(message);
+    }
+  };
+
   const value = {
     user,
     loading,
@@ -85,6 +102,7 @@ export const AuthProvider = ({ children }) => {
     register,
     login,
     logout,
+    updateProfile,
     isAuthenticated: !!user
   };
 
