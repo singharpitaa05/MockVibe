@@ -30,7 +30,7 @@ const Home = () => {
                 <>
                   <Link
                     to="/login"
-                    className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary-600"
+                    className="px-4 py-2 text-sm font-medium text-blue-700 hover:text-primary-600"
                   >
                     Login
                   </Link>
