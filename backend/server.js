@@ -10,6 +10,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
+import interviewRoutes from './routes/interviewRoutes.js';
+import questionRoutes from './routes/questionRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 
 // Load environment variables
@@ -46,6 +48,8 @@ app.use(
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/questions', questionRoutes);
+app.use('/api/interviews', interviewRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
