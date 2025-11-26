@@ -33,6 +33,6 @@ export const logout = async () => {
 
 // Get current user
 export const getCurrentUser = async () => {
-  const response = await api.get('/auth/me');
+  const response = await api.get('/api/auth/me');
   return response.data;
 };

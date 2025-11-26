@@ -7,8 +7,10 @@ import { AuthProvider } from './context/AuthContext';
 import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import MyInterviews from './pages/MyInterviews';
 import Profile from './pages/Profile';
 import Register from './pages/Register';
+import ScheduleInterview from './pages/ScheduleInterview';
 
 function App() {
   return (
@@ -34,6 +36,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/schedule-interview"
+            element={
+              <ProtectedRoute>
+                <ScheduleInterview />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/interviews"
+            element={
+              <ProtectedRoute>
+                <MyInterviews />
               </ProtectedRoute>
             }
           />
