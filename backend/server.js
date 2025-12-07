@@ -2,6 +2,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import connectDB from './config/db.js';
+import adminRoutes from './routes/adminRoutes.js';
+import advancedVideoRoutes from './routes/advancedVideoRoutes.js';
 import aiInterviewRoutes from './routes/aiInterviewRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import interviewRoutes from './routes/interviewRoutes.js';
@@ -10,6 +12,7 @@ import preferencesRoutes from './routes/preferencesRoutes.js';
 import questionRoutes from './routes/questionRoutes.js';
 import statisticsRoutes from './routes/statisticsRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import voiceInterviewRoutes from './routes/voiceInterviewRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -33,6 +36,9 @@ app.use('/api/questions', questionRoutes);
 app.use('/api/ai-interview', aiInterviewRoutes);
 app.use('/api/preferences', preferencesRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/voice-interview', voiceInterviewRoutes);
+app.use('/api/advanced-video', advancedVideoRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
