@@ -51,6 +51,16 @@ const generateNextQuestion = async (req, res) => {
     });
   } catch (error) {
     console.error('Error generating question:', error);
+    
+    // Check if it's an API quota error - provide helpful message
+    if (error.message?.includes('quota') || error.message?.includes('rate limit')) {
+      return res.status(503).json({ 
+        message: 'Using pre-generated questions due to API quota limits. Interview will continue with database questions.',
+        isUsingFallback: true,
+        error: error.message 
+      });
+    }
+    
     res.status(500).json({ message: 'Failed to generate question', error: error.message });
   }
 };
@@ -269,3 +279,4 @@ export {
     generateFollowUp, generateNextQuestion,
     submitAndEvaluateAnswer
 };
+
