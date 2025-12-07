@@ -15,6 +15,11 @@ import ProfileSetup from './pages/ProfileSetup';
 import Register from './pages/Register';
 import Settings from './pages/Settings';
 
+// Admin Pages
+import AdminDashboard from './pages/admin/AdminDashboard';
+import QuestionManagement from './pages/admin/QuestionManagement';
+import UserManagement from './pages/admin/UserManagement';
+
 function App() {
   return (
     <AuthProvider>
@@ -88,6 +93,43 @@ function App() {
             element={
               <ProtectedRoute>
                 <Settings />
+              </ProtectedRoute>
+            }
+          />
+          
+          {/* Admin Routes - require admin role */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute>
+                <UserManagement />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/admin/users/:id"
+            element={
+              <ProtectedRoute>
+                <UserManagement />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/admin/questions"
+            element={
+              <ProtectedRoute>
+                <QuestionManagement />
               </ProtectedRoute>
             }
           />
