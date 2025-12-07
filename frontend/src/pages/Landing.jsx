@@ -9,7 +9,7 @@ const Landing = () => {
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-indigo-50 text-gray-900">
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-blue-100">
+      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-blue-100 rounded-b-3xl shadow-xl overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-2">
@@ -196,36 +196,6 @@ const Landing = () => {
         </div>
       </div>
 
-      {/* CTA Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-blue-600 via-indigo-600 to-blue-700 p-12 md:p-20">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
-          <div className="relative text-center space-y-8">
-            <h3 className="text-4xl md:text-5xl font-bold text-white">
-              Ready to Transform Your Interview Skills?
-            </h3>
-            <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto leading-relaxed">
-              Join thousands of candidates who have successfully landed their dream jobs by practicing with MockVibe
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
-              <Link
-                to="/register"
-                className="inline-block px-8 py-4 bg-white text-blue-600 font-bold text-lg rounded-xl hover:shadow-2xl transition duration-300 transform hover:scale-105"
-              >
-                Create Free Account
-              </Link>
-              <Link
-                to="/login"
-                className="inline-block px-8 py-4 bg-blue-700/50 text-white font-bold text-lg rounded-xl border-2 border-white/30 hover:border-white hover:bg-blue-700 transition duration-300 transform hover:scale-105"
-              >
-                Already a Member?
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Footer */}
       <footer className="bg-linear-to-b from-transparent to-gray-50 border-t border-blue-100 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -262,7 +232,7 @@ const Landing = () => {
             </div>
           </div>
           <div className="border-t border-blue-100 pt-8 text-center">
-            <p className="text-gray-600">&copy; 2024 MockVibe. All rights reserved. | Built with passion for your success.</p>
+            <p className="text-gray-600">&copy; 2025 MockVibe. All rights reserved. | Built with passion for your success.</p>
           </div>
         </div>
       </footer>

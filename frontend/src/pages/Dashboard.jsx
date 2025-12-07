@@ -40,6 +40,18 @@ const Dashboard = () => {
             </div>
             <div className="flex items-center space-x-6">
               <span className="text-gray-700">Welcome, {user?.name || 'User'}</span>
+              
+              {/* Admin Panel Link (only for admins) */}
+              {user?.role === 'admin' && (
+                <button
+                  onClick={() => navigate('/admin')}
+                  className="text-purple-700 hover:text-purple-900 font-semibold"
+                  title="Admin Panel"
+                >
+                  👑 Admin
+                </button>
+              )}
+              
               <button
                 onClick={() => navigate('/interview-history')}
                 className="text-gray-700 hover:text-blue-600"
@@ -77,10 +89,28 @@ const Dashboard = () => {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Admin Quick Access Card (only for admins) */}
+        {user?.role === 'admin' && (
+          <div className="bg-linear-gradient-to-r from-purple-600 to-indigo-600 rounded-lg p-6 mb-7 text-black">
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="text-xl font-bold mb-1">👑 Admin Access</h3>
+                <p className="text-purple-500 text-sm">Manage users, questions, and platform settings</p>
+              </div>
+              <button
+                onClick={() => navigate('/admin')}
+                className="px-6 py-3 bg-white text-purple-600 rounded-lg hover:bg-purple-50 font-semibold"
+              >
+                Open Admin Panel
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Welcome Section */}
-        <div className="bg-linear-gradient-to-r from-blue-600 to-indigo-600 rounded-lg p-8 text-white mb-8">
+        <div className="bg-linear-gradient-to-r from-blue-600 to-indigo-600 rounded-lg p-8 text-black mb-8">
           <h2 className="text-3xl font-bold mb-2">Welcome back, {user?.name}! 👋</h2>
-          <p className="text-blue-100">Ready to practice your interview skills?</p>
+          <p className="text-black-100">Ready to practice your interview skills?</p>
         </div>
 
         {/* Quick Actions */}

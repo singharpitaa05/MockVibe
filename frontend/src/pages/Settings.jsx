@@ -92,10 +92,10 @@ const Settings = () => {
   }
 
   const tabs = [
-    { id: 'interview', label: '🎯 Interview Defaults', icon: '🎯' },
-    { id: 'notifications', label: '🔔 Notifications', icon: '🔔' },
-    { id: 'practice', label: '💪 Practice Mode', icon: '💪' },
-    { id: 'appearance', label: '🎨 Appearance', icon: '🎨' },
+    { id: 'interview', label: 'Interview Defaults', icon: '🎯' },
+    { id: 'notifications', label: 'Notifications', icon: '🔔' },
+    { id: 'practice', label: 'Practice Mode', icon: '💪' },
+    { id: 'appearance', label: 'Appearance', icon: '🎨' },
   ];
 
   return (
