@@ -2,6 +2,7 @@
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
+import Question from '../models/Question.js';
 
 dotenv.config();
 
@@ -13,11 +14,99 @@ const getModel = () => {
   return genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 };
 
+// Cache for storing generated questions to reduce API calls
+const questionCache = new Map();
+const feedbackCache = new Map();
+
+// Retry configuration
+const MAX_RETRIES = 3;
+const INITIAL_RETRY_DELAY = 1000; // 1 second
+
+// Utility function to delay execution
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Utility function to retry API calls with exponential backoff
+const retryWithBackoff = async (fn, maxRetries = MAX_RETRIES, initialDelay = INITIAL_RETRY_DELAY) => {
+  let lastError;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error;
+      
+      // Check if it's a rate limit error
+      if (error.status === 429 || error.message?.includes('quota') || error.message?.includes('rate limit')) {
+        const delayTime = initialDelay * Math.pow(2, attempt - 1); // Exponential backoff
+        const retryAfter = error.retryAfter || Math.ceil(delayTime / 1000);
+        
+        console.warn(`Rate limit hit. Retry attempt ${attempt}/${maxRetries}. Waiting ${retryAfter}s...`);
+        await delay(retryAfter * 1000);
+        continue;
+      }
+      
+      // Don't retry on other errors
+      throw error;
+    }
+  }
+  
+  throw lastError;
+};
+
+// Helper function to get a question from database as fallback
+const getDatabaseQuestion = async (interviewType, difficulty, previousQuestions = []) => {
+  try {
+    // Map interviewType to category
+    const categoryMap = {
+      'Behavioral': 'Behavioral',
+      'Coding': 'Coding',
+      'Technical': 'Technical Theory',
+      'System Design': 'System Design',
+      'HR': 'HR'
+    };
+
+    const category = categoryMap[interviewType] || interviewType;
+
+    // Find a question that hasn't been used yet
+    const question = await Question.findOne({
+      category: category,
+      difficulty: difficulty,
+      questionText: { $nin: previousQuestions }
+    }).lean();
+
+    if (question) {
+      return question.questionText;
+    }
+
+    // If no exact match, find any question in the category regardless of difficulty
+    const fallbackQuestion = await Question.findOne({
+      category: category,
+      questionText: { $nin: previousQuestions }
+    }).lean();
+
+    if (fallbackQuestion) {
+      return fallbackQuestion.questionText;
+    }
+
+    // Last resort: return any question not previously asked
+    const anyQuestion = await Question.findOne({
+      questionText: { $nin: previousQuestions }
+    }).lean();
+
+    if (anyQuestion) {
+      return anyQuestion.questionText;
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Error fetching question from database:', error);
+    return null;
+  }
+};
+
 // Generate interview question based on context
 const generateQuestion = async (context) => {
   try {
-    const model = getModel();
-    
     const {
       jobRole,
       interviewType,
@@ -25,6 +114,20 @@ const generateQuestion = async (context) => {
       previousQuestions = [],
       userProfile,
     } = context;
+
+    // Create cache key
+    const cacheKey = `${jobRole}-${interviewType}-${difficulty}`;
+    
+    // Check cache first
+    if (questionCache.has(cacheKey)) {
+      const cachedQuestions = questionCache.get(cacheKey);
+      // Return a random cached question that hasn't been used
+      const availableQuestions = cachedQuestions.filter(q => !previousQuestions.includes(q));
+      if (availableQuestions.length > 0) {
+        console.log('Using cached question');
+        return availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
+      }
+    }
 
     const prompt = `You are an expert technical interviewer conducting a ${interviewType} interview for a ${jobRole} position at ${difficulty} level.
 
@@ -46,22 +149,59 @@ ${interviewType === 'Coding' ? '5. Includes clear input/output examples and cons
 
 Return ONLY the question text, nothing else. Do not include any preamble, numbering, or explanation.`;
 
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    const question = response.text().trim();
+    const question = await retryWithBackoff(async () => {
+      const model = getModel();
+      const result = await model.generateContent(prompt);
+      const response = result.response;
+      
+      if (!response) {
+        throw new Error('Empty response from Gemini API');
+      }
+      
+      const text = response.text();
+      if (!text) {
+        throw new Error('No text content in Gemini response');
+      }
+      
+      return text.trim();
+    }).catch(async (error) => {
+      // If API fails due to quota/rate limit, use database fallback
+      if (error.status === 429 || error.message?.includes('quota') || error.message?.includes('rate limit')) {
+        console.warn('API quota exhausted, using database fallback questions');
+        const dbQuestion = await getDatabaseQuestion(interviewType, difficulty, previousQuestions);
+        if (dbQuestion) {
+          return dbQuestion;
+        }
+      }
+      throw error;
+    });
+
+    // Cache the generated question
+    if (!questionCache.has(cacheKey)) {
+      questionCache.set(cacheKey, []);
+    }
+    questionCache.get(cacheKey).push(question);
 
     return question;
   } catch (error) {
-    console.error('Error generating question:', error);
-    throw new Error('Failed to generate question');
+    console.error('Error generating question:', error.message || error);
+    // Last resort fallback - return a database question
+    try {
+      const dbQuestion = await getDatabaseQuestion(interviewType, difficulty, previousQuestions);
+      if (dbQuestion) {
+        console.log('Using database fallback question');
+        return dbQuestion;
+      }
+    } catch (dbError) {
+      console.error('Database fallback also failed:', dbError);
+    }
+    throw error;
   }
 };
 
 // Generate follow-up question based on previous answer
 const generateFollowUpQuestion = async (context) => {
   try {
-    const model = getModel();
-    
     const {
       originalQuestion,
       userAnswer,
@@ -83,22 +223,33 @@ Generate ONE follow-up question that:
 
 Return ONLY the follow-up question text, nothing else.`;
 
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    const followUp = response.text().trim();
+    const followUp = await retryWithBackoff(async () => {
+      const model = getModel();
+      const result = await model.generateContent(prompt);
+      const response = result.response;
+      
+      if (!response) {
+        throw new Error('Empty response from Gemini API');
+      }
+      
+      const text = response.text();
+      if (!text) {
+        throw new Error('No text content in Gemini response');
+      }
+      
+      return text.trim();
+    });
 
     return followUp;
   } catch (error) {
-    console.error('Error generating follow-up:', error);
-    throw new Error('Failed to generate follow-up question');
+    console.error('Error generating follow-up:', error.message || error);
+    throw error;
   }
 };
 
 // Evaluate user's answer
 const evaluateAnswer = async (context) => {
   try {
-    const model = getModel();
-    
     const {
       question,
       answer,
@@ -140,18 +291,29 @@ ${interviewType === 'Coding' ? '- Code Quality: Is the solution efficient and we
 
 Return ONLY the JSON object, no additional text.`;
 
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    let evaluationText = response.text().trim();
-
-    // Remove markdown code blocks if present
-    evaluationText = evaluationText.replace(/```json\n?/g, '').replace(/```\n?/g, '');
-
-    const evaluation = JSON.parse(evaluationText);
+    const evaluation = await retryWithBackoff(async () => {
+      const model = getModel();
+      const result = await model.generateContent(prompt);
+      const response = result.response;
+      
+      if (!response) {
+        throw new Error('Empty response from Gemini API');
+      }
+      
+      let evaluationText = response.text();
+      if (!evaluationText) {
+        throw new Error('No text content in Gemini response');
+      }
+      
+      evaluationText = evaluationText.trim();
+      evaluationText = evaluationText.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+      
+      return JSON.parse(evaluationText);
+    });
 
     return evaluation;
   } catch (error) {
-    console.error('Error evaluating answer:', error);
+    console.error('Error evaluating answer:', error.message || error);
     // Return a default evaluation if AI fails
     return {
       score: 50,
@@ -171,14 +333,21 @@ Return ONLY the JSON object, no additional text.`;
 // Generate overall interview feedback
 const generateOverallFeedback = async (context) => {
   try {
-    const model = getModel();
-    
     const {
       questions,
       averageScore,
       interviewType,
       jobRole,
     } = context;
+
+    // Create cache key
+    const cacheKey = `feedback-${jobRole}-${interviewType}-${Math.floor(averageScore / 10)}`;
+    
+    // Check cache first
+    if (feedbackCache.has(cacheKey)) {
+      console.log('Using cached feedback');
+      return feedbackCache.get(cacheKey);
+    }
 
     const questionsAndAnswers = questions.map((q, i) => 
       `Q${i + 1}: ${q.question}\nAnswer: ${q.answer}\nScore: ${q.evaluation?.score || 'N/A'}`
@@ -207,18 +376,32 @@ Focus on:
 
 Return ONLY the JSON object, no additional text.`;
 
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    let feedbackText = response.text().trim();
+    const feedback = await retryWithBackoff(async () => {
+      const model = getModel();
+      const result = await model.generateContent(prompt);
+      const response = result.response;
+      
+      if (!response) {
+        throw new Error('Empty response from Gemini API');
+      }
+      
+      let feedbackText = response.text();
+      if (!feedbackText) {
+        throw new Error('No text content in Gemini response');
+      }
+      
+      feedbackText = feedbackText.trim();
+      feedbackText = feedbackText.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+      
+      return JSON.parse(feedbackText);
+    });
 
-    // Remove markdown code blocks if present
-    feedbackText = feedbackText.replace(/```json\n?/g, '').replace(/```\n?/g, '');
-
-    const feedback = JSON.parse(feedbackText);
+    // Cache the feedback
+    feedbackCache.set(cacheKey, feedback);
 
     return feedback;
   } catch (error) {
-    console.error('Error generating overall feedback:', error);
+    console.error('Error generating overall feedback:', error.message || error);
     return {
       overallStrengths: ['Completed the interview'],
       overallWeaknesses: ['Could not generate detailed feedback'],
