@@ -1,1 +1,41 @@
 @import "tailwindcss";
+
+/* Graph-paper grid background pattern */
+.grid-background {
+  background-color: #f0f4f7;
+  background-image:
+    linear-gradient(rgba(36, 37, 38, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(147, 165, 185, 0.15) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(240, 244, 247, 1) 0%, rgba(226, 232, 240, 1) 100%);
+  background-size: 20px 20px, 20px 20px, 100% 100%;
+  background-attachment: fixed;
+}
+
+/* Floating animation for stat badges */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* When added to <body>, prevent the document from scrolling
+   while allowing inner containers (like .landing-wrapper) to scroll. */
+.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* Landing page wrapper: take full viewport and allow internal scrolling
+   so the browser window itself doesn't scroll. */
+.landing-wrapper {
+  height: 100vh;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}

@@ -1,36 +1,43 @@
 // LANDING PAGE COMPONENT
 
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import AIInterviewIllustration from '../components/AIInterviewIllustration';
+import FloatingStatsBadges from '../components/FloatingStatsBadges';
 import { useAuth } from '../context/AuthContext';
 
 const Landing = () => {
   const { isAuthenticated } = useAuth();
 
+  useEffect(() => {
+    // Prevent the main document from scrolling while this page is mounted
+    document.body.classList.add('no-scroll');
+    return () => document.body.classList.remove('no-scroll');
+  }, []);
+
   return (
-    <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-indigo-50 text-gray-900">
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-blue-100 rounded-b-3xl shadow-xl overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-xl bg-linear-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
-                <span className="text-white font-bold text-lg">M</span>
-              </div>
-              <h1 className="text-2xl font-bold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+    <div className="landing-wrapper text-gray-900 grid-background">
+      {/* Navbar (pill-shaped, centered, larger elements) */}
+      <nav className="sticky top-6 z-50 bg-white/90 backdrop-blur-xl border border-blue-100 shadow-xl overflow-hidden rounded-full mx-6 md:mx-12 py-2 px-3">
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-14 md:h-16">
+            <div className="flex items-center gap-3 md:gap-4">
+              <img src="/logo.png" alt="MockVibe Logo" className="w-12 h-12 rounded-2xl" />
+              <h1 className="text-xl md:text-2xl lg:text-3xl font-extrabold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 MockVibe
               </h1>
             </div>
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="text-gray-700 hover:text-blue-600 font-medium transition duration-200">
+            <div className="hidden md:flex items-center space-x-10">
+              <a href="#features" className="text-gray-700 hover:text-blue-600 font-semibold text-lg md:text-xl transition duration-200">
                 Features
               </a>
-              <a href="#how-it-works" className="text-gray-700 hover:text-blue-600 font-medium transition duration-200">
+              <a href="#how-it-works" className="text-gray-700 hover:text-blue-600 font-semibold text-lg md:text-xl transition duration-200">
                 How It Works
               </a>
               {isAuthenticated ? (
                 <Link
                   to="/dashboard"
-                  className="px-6 py-2.5 bg-linear-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-blue-200 transition duration-200 transform hover:scale-105"
+                  className="px-8 py-3 bg-linear-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-blue-200 transition duration-200 transform hover:scale-105 text-lg md:text-xl"
                 >
                   Dashboard
                 </Link>
@@ -38,13 +45,13 @@ const Landing = () => {
                 <>
                   <Link
                     to="/login"
-                    className="px-6 py-2.5 text-blue-600 hover:text-indigo-600 font-semibold transition duration-200"
+                    className="px-7 py-3 text-blue-600 hover:text-indigo-600 font-semibold text-lg md:text-xl transition duration-200"
                   >
                     Login
                   </Link>
                   <Link
                     to="/register"
-                    className="px-6 py-2.5 bg-linear-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-blue-200 transition duration-200 transform hover:scale-105"
+                    className="px-8 py-3 bg-linear-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-blue-200 transition duration-200 transform hover:scale-105 text-lg md:text-xl"
                   >
                     Sign Up
                   </Link>
@@ -55,14 +62,14 @@ const Landing = () => {
               {isAuthenticated ? (
                 <Link
                   to="/dashboard"
-                  className="px-4 py-2 bg-linear-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg text-sm"
+                  className="px-5 py-2.5 bg-linear-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg text-sm md:text-base"
                 >
                   Dashboard
                 </Link>
               ) : (
                 <Link
                   to="/register"
-                  className="px-4 py-2 bg-linear-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg text-sm"
+                  className="px-5 py-2.5 bg-linear-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg text-sm md:text-base"
                 >
                   Sign Up
                 </Link>
@@ -74,61 +81,49 @@ const Landing = () => {
 
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
-        <div className="text-center space-y-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 rounded-full border border-blue-200">
-            <span className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></span>
-            <span className="text-sm font-semibold text-blue-700">Powered by Advanced AI</span>
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Left Column - Text Content */}
+          <div className="space-y-8">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 rounded-full border border-blue-200">
+              <span className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></span>
+              <span className="text-sm font-semibold text-blue-700">Powered by Advanced AI</span>
+            </div>
+            <h2 className="text-5xl md:text-6xl lg:text-6xl font-black tracking-tight">
+              Master Your Interviews with
+              <span className="block bg-linear-to-r from-blue-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent mt-2">
+                AI-Powered Mock Practice
+              </span>
+            </h2>
+            <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
+              Practice coding, behavioral, and system design interviews with our intelligent AI interviewer. Get real-time feedback, improve your skills, and land your dream job with confidence.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <Link
+                to="/register"
+                className="px-8 py-4 bg-linear-to-r from-blue-600 to-indigo-600 text-white font-bold text-lg rounded-xl hover:shadow-2xl hover:shadow-blue-300 transition duration-300 transform hover:scale-105"
+              >
+                Get Started Free →
+              </Link>
+              <a
+                href="#how-it-works"
+                className="px-8 py-4 bg-white text-blue-600 font-bold text-lg rounded-xl border-2 border-blue-200 hover:border-blue-600 hover:shadow-lg transition duration-300 transform hover:scale-105"
+              >
+                Learn More
+              </a>
+            </div>
+            <p className="text-sm text-gray-500">No credit card required. Start practicing today.</p>
           </div>
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight">
-            Master Your Interviews with
-            <span className="block bg-linear-to-r from-blue-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent mt-2">
-              AI-Powered Mock Practice
-            </span>
-          </h2>
-          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Practice coding, behavioral, and system design interviews with our intelligent AI interviewer. Get real-time feedback, improve your skills, and land your dream job with confidence.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
-            <Link
-              to="/register"
-              className="px-8 py-4 bg-linear-to-r from-blue-600 to-indigo-600 text-white font-bold text-lg rounded-xl hover:shadow-2xl hover:shadow-blue-300 transition duration-300 transform hover:scale-105"
-            >
-              Get Started Free →
-            </Link>
-            <a
-              href="#how-it-works"
-              className="px-8 py-4 bg-white text-blue-600 font-bold text-lg rounded-xl border-2 border-blue-200 hover:border-blue-600 hover:shadow-lg transition duration-300 transform hover:scale-105"
-            >
-              Learn More
-            </a>
-          </div>
-          <p className="text-sm text-gray-500">No credit card required. Start practicing today.</p>
-        </div>
 
-        {/* Decorative Elements */}
-        <div className="mt-24 relative">
-          <div className="absolute -top-40 -right-20 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-          <div className="absolute -bottom-40 -left-20 w-96 h-96 bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-          <div className="relative bg-linear-to-br from-white/80 to-blue-50/80 backdrop-blur rounded-2xl border border-blue-100/50 p-8 md:p-12">
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="text-4xl font-bold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">1000+</div>
-                <p className="text-gray-600 font-medium mt-2">Interview Questions</p>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">50K+</div>
-                <p className="text-gray-600 font-medium mt-2">Active Users</p>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">95%</div>
-                <p className="text-gray-600 font-medium mt-2">Success Rate</p>
-              </div>
+          {/* Right Column - Illustration (now horizontal rectangle) */}
+          <div className="hidden lg:flex items-center justify-center relative w-full h-full">
+            <div className="relative w-full max-w-4xl h-80 md:h-96 lg:h-96 xl:h-96">
+              <AIInterviewIllustration />
+              <FloatingStatsBadges />
             </div>
           </div>
         </div>
       </div>
-
-      {/* Features Section */}
+    {/* Features Section */}
       <div id="features" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div className="text-center mb-20">
           <h3 className="text-4xl md:text-5xl font-bold mb-6">
@@ -196,43 +191,42 @@ const Landing = () => {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="bg-linear-to-b from-transparent to-gray-50 border-t border-blue-100 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-linear-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
-                  <span className="text-white font-bold">M</span>
-                </div>
-                <span className="font-bold text-lg text-gray-900">MockVibe</span>
-              </div>
-              <p className="text-gray-600">AI-powered interview preparation platform</p>
-            </div>
-            <div>
-              <h5 className="font-semibold text-gray-900 mb-4">Product</h5>
-              <ul className="space-y-2 text-gray-600">
-                <li><a href="#features" className="hover:text-blue-600 transition">Features</a></li>
-                <li><a href="#how-it-works" className="hover:text-blue-600 transition">How it works</a></li>
-              </ul>
-            </div>
-            <div>
-              <h5 className="font-semibold text-gray-900 mb-4">Company</h5>
-              <ul className="space-y-2 text-gray-600">
-                <li><a href="#" className="hover:text-blue-600 transition">About</a></li>
-                <li><a href="#" className="hover:text-blue-600 transition">Blog</a></li>
-              </ul>
-            </div>
-            <div>
-              <h5 className="font-semibold text-gray-900 mb-4">Legal</h5>
-              <ul className="space-y-2 text-gray-600">
-                <li><a href="#" className="hover:text-blue-600 transition">Privacy</a></li>
-                <li><a href="#" className="hover:text-blue-600 transition">Terms</a></li>
-              </ul>
-            </div>
+      {/* Footer - Custom Gradient Bar */}
+      <footer className="w-full bg-linear-to-r from-[#0B1120] to-[#172554] shadow-[0_-6px_24px_-8px_rgba(11,17,32,0.45)] border-t-0 py-7 px-0 mt-16">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-4 sm:px-6 lg:px-8">
+          {/* Left: Branding Text */}
+          <div className="w-full md:w-auto text-left">
+            <p className="text-gray-200 font-semibold text-base md:text-lg mb-2 md:mb-0">
+              Designed & Developed by the Arpita Singh <span className="text-blue-400">💙</span>
+            </p>
+            <p className="text-gray-400 text-xs md:text-sm">&copy; 2025 MockVibe. All rights reserved.</p>
           </div>
-          <div className="border-t border-blue-100 pt-8 text-center">
-            <p className="text-gray-600">&copy; 2025 MockVibe. All rights reserved. | Built with passion for your success.</p>
+          {/* Right: Social Icons */}
+          <div className="flex flex-row items-center gap-6 mt-4 md:mt-0 w-full md:w-auto justify-start md:justify-end">
+            {/* GitHub Icon */}
+            <a
+              href="https://github.com/singharpitaa05"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              className="text-gray-300 hover:text-white transition-colors duration-200"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75 0 4.302 2.792 7.953 6.653 9.24.486.09.664-.211.664-.47 0-.232-.009-.846-.013-1.66-2.706.588-3.276-1.305-3.276-1.305-.442-1.123-1.08-1.422-1.08-1.422-.883-.604.067-.592.067-.592  .976.069 1.49 1.003 1.49 1.003.867 1.486 2.275 1.057 2.832.809.088-.628.34-1.057.618-1.3-2.162-.246-4.437-1.081-4.437-4.814 0-1.063.38-1.933 1.003-2.615-.101-.247-.435-1.24.096-2.586 0 0 .816-.262 2.675 1.001A9.35 9.35 0 0 1 12 6.844c.827.004 1.66.112 2.438.328 1.858-1.263 2.673-1.001 2.673-1.001.533 1.346.199 2.339.098 2.586.625.682 1.002 1.552 1.002 2.615 0 3.742-2.278 4.565-4.447 4.808.35.302.66.899.66 1.814 0 1.31-.012 2.367-.012 2.69 0 .261.176.563.67.468C18.96 19.95 21.75 16.3 21.75 12c0-5.385-4.365-9.75-9.75-9.75z" />
+              </svg>
+            </a>
+            {/* LinkedIn Icon */}
+            <a
+              href="https://www.linkedin.com/in/arpita-singh-569202296/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className="text-gray-300 hover:text-blue-400 transition-colors duration-200"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 8.25A3.75 3.75 0 0 1 20.25 12v3.75A3.75 3.75 0 0 1 16.5 19.5h-9A3.75 3.75 0 0 1 3.75 15.75V12A3.75 3.75 0 0 1 7.5 8.25h9zm-7.125 7.125v-4.5m3 4.5v-2.25m3 2.25v-3.375m-6.375-2.25a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0z" />
+              </svg>
+            </a>
           </div>
         </div>
       </footer>
