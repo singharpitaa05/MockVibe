@@ -122,6 +122,10 @@ MockVibe is a sophisticated mock interview preparation platform designed to help
 - **Backend**: Render / Heroku 🚀
 - **Database**: MongoDB Atlas 🗄️
 - **Version Control**: Git + GitHub 🧑‍💻
+📸 Screenshots
+![](Screenshot 2026-01-06 214214.png)
+
+
 
  📁 Project Structure
 ```
