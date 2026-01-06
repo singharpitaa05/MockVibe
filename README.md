@@ -360,6 +360,7 @@ Open browser: `http://localhost:5173`
 4. **View Statistics**: Monitor platform usage and user activity
 5. **Make New Admins**: Promote users to admin status
 
+<a id="how-to-contribute"></a>
 ## How to Contribute
 
 1. Fork the repository
