@@ -22,7 +22,7 @@ Comprehensive Interview Preparation Platform with AI-Driven Mock Interviews, Vid
 - [Project Structure](#-project-structure)
 - [Installation](#-installation)
 - [Usage](#-usage)
-- [Contributing](#-contributing)
+- [How to Contribute](#-how-to-contribute)
 - [Author](#-author)
 - [License](#-license)
 
@@ -359,7 +359,7 @@ Open browser: `http://localhost:5173`
 4. **View Statistics**: Monitor platform usage and user activity
 5. **Make New Admins**: Promote users to admin status
 
-### How to Contribute
+## How to Contribute
 
 1. Fork the repository
 2. Create feature branch: `git checkout -b feature/amazing-feature`
@@ -367,7 +367,6 @@ Open browser: `http://localhost:5173`
 4. Push to branch: `git push origin feature/amazing-feature`
 5. Open a Pull Request
 
-## 👤 Author
 ## 📸 Screenshots
 
 ### Landing Page
