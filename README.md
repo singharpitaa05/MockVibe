@@ -10,11 +10,8 @@ Comprehensive Interview Preparation Platform with AI-Driven Mock Interviews, Vid
 [![React](https://img.shields.io/badge/React-19.x-blue)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-latest-646CFF)](https://vitejs.dev/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Latest-brightgreen)](https://www.mongodb.com/)
-[![TensorFlow](https://img.shields.io/badge/TensorFlow-JS-orange)](https://www.tensorflow.org/js/)
 [![Google Generative AI](https://img.shields.io/badge/Google%20GenAI-Gemini-blue)](https://ai.google.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38B2AC)](https://tailwindcss.com/)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
-
 </div>
 
 ## 📋 Table of Contents
@@ -44,7 +41,6 @@ Comprehensive Interview Preparation Platform with AI-Driven Mock Interviews, Vid
 - **Admin Dashboard** for content management
 - **User Preference Management** for customized practice sessions
 - **JWT-based Secure Authentication**
-- **Responsive Design** for all devices
 
 ## ✨ Features
 
@@ -128,7 +124,6 @@ Build Tool: Vite ⚙️
 Styling: Tailwind CSS v4 🎨
 Routing: React Router DOM 🗺️
 HTTP Client: Axios 🌐
-ML Model: TensorFlow.js + BlazeFace 🧠
 Icons: Lucide React 🌟
 Form Handling: React Hook Form (optional) 📋
 ```
@@ -141,26 +136,15 @@ Framework: Express.js 5.x 🚀
 Database: MongoDB + Mongoose 🗄️
 Authentication: JWT (jsonwebtoken) 🔑
 AI Integration: Google Generative AI (Gemini) 🤖
-Code Execution: VM2 📦
 Validation: Express Validator 🔍
 Security: Bcryptjs, CORS 🔒
-```
-
-### Key Libraries & Services
-
-```
-Google Generative AI: AI-powered interview responses 🤖
-TensorFlow.js: Browser-based ML for video analysis 🧠
-BlazeFace: Lightweight face detection in browser 👤
-Mongoose: MongoDB object modeling 📊
-Express Validator: Request validation 🔍
 ```
 
 ### DevOps & Deployment
 
 ```
-Frontend: Vercel (Recommended) 🌐
-Backend: Render/Railway (Recommended) 🚀
+Frontend: Vercel 🌐
+Backend: Render 🚀
 Database: MongoDB Atlas 🗄️
 Version Control: Git + GitHub 🧑‍💻
 ```
@@ -293,15 +277,13 @@ NODE_ENV=development
 PORT=5000
 
 # Database
-MONGODB_URI=mongodb://localhost:27017/mockvibe
-# OR for MongoDB Atlas:
-# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/mockvibe
+MONGODB_URI=
 
 # Authentication
-JWT_SECRET=your-super-secret-jwt-key-min-32-characters-long
+JWT_SECRET=
 
 # Google Generative AI
-GEMINI_API_KEY=your-google-generative-ai-api-key
+GEMINI_API_KEY=
 
 # CORS
 CLIENT_URL=http://localhost:5173
@@ -377,10 +359,6 @@ Open browser: `http://localhost:5173`
 4. **View Statistics**: Monitor platform usage and user activity
 5. **Make New Admins**: Promote users to admin status
 
-## 🤝 Contributing
-
-I welcome contributions! Please follow these guidelines:
-
 ### How to Contribute
 
 1. Fork the repository
@@ -389,13 +367,21 @@ I welcome contributions! Please follow these guidelines:
 4. Push to branch: `git push origin feature/amazing-feature`
 5. Open a Pull Request
 
-### Development Guidelines
+## 👤 Author
+## 📸 Screenshots
 
-- Follow existing code style and patterns
-- Write meaningful commit messages
-- Test your changes before submitting PR
-- Update documentation as needed
-- Ensure no console errors or warnings
+### Landing Page
+![Homepage](./homepage.png)
+![Homepage Features](./homepage2.png)
+
+### Dashboard & Analytics
+![Dashboard Overview](./dashboard1.png)
+![Dashboard with Admin Access](./Dashboard2.png)
+![Dashboard Analytics](./Dashboard3.png)
+
+### Interview Sessions
+![Interview Page](./interviewpage.png)
+![Interview Session](./Interviewpage2.png)
 
 ## 👤 Author
 
@@ -403,9 +389,8 @@ Designed and Developed with 💖 by **Arpita Singh**
 
 🔗 **Connect with me:**
 
-- 📧 [Email](mailto:your-email@example.com)
-- 💼 [LinkedIn](https://www.linkedin.com/in/your-profile/)
-- 🌐 [Portfolio](https://your-portfolio.com)
+- 📧 [Email](mailto:singharpita.05march@gmail.com)
+- 💼 [LinkedIn](https://www.linkedin.com/in/singharpitaa05/)
 - 🐙 [GitHub](https://github.com/singharpitaa05)
 
 📬 Feel free to reach out for questions, suggestions, or collaboration!
@@ -413,13 +398,3 @@ Designed and Developed with 💖 by **Arpita Singh**
 ## 📄 License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
----
-
-<div align="center">
-
-### 🌟 If you found this project helpful, please give it a star! ⭐
-
-Made with ❤️ by Arpita Singh
-
-</div>
