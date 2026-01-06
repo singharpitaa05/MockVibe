@@ -22,7 +22,7 @@ Comprehensive Interview Preparation Platform with AI-Driven Mock Interviews, Vid
 - [Project Structure](#-project-structure)
 - [Installation](#-installation)
 - [Usage](#-usage)
-- [How to Contribute](#-how-to-contribute)
+- [How to Contribute](# how-to-contribute)
 - [Screenshots](#-screenshots)
 - [Author](#-author)
 - [License](#-license)
