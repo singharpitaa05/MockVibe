@@ -80,10 +80,10 @@ const Landing = () => {
       </nav>
 
       {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 lg:pt-20 pb-16 lg:pb-24">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left Column - Text Content */}
-          <div className="space-y-8">
+          <div className="space-y-8 -mt-6 lg:-mt-10">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 rounded-full border border-blue-200">
               <span className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></span>
               <span className="text-sm font-semibold text-blue-700">Powered by Advanced AI</span>
